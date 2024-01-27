@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://chyrwbr208a5t"]
+
+[ext_resource type="Script" path="res://World.gd" id="1_ni4w6"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_xh6ba"]
+
+[node name="World" type="Node2D"]
+script = ExtResource("1_ni4w6")
+noise = SubResource("NoiseTexture2D_xh6ba")
+
+[node name="Ground" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(2, -48)
+zoom = Vector2(0.5, 0.5)
+
+[node name="Sky" type="Node2D" parent="."]
