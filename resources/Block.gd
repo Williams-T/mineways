@@ -15,7 +15,6 @@ var _texture : Texture2D
 var texture_size = Vector2.ZERO
 var texture_origin = Vector2.ZERO
 
-
 var integrity = 3
 var armor = 0
 
@@ -65,6 +64,4 @@ func _process(delta):
 		if count >= timer:
 			count = 0.0
 			remap_texture()
-
-
 

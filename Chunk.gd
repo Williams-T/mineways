@@ -45,13 +45,16 @@ func add_block(block: Block, local_position: Vector2):
 # Activate the chunk (called when the chunk is within active radius of the player)
 func activate():
 	visible = true
+	for block in blocks.values():
+		self.add_child.call_deferred(block)
 	# You can add more logic here if needed, such as enabling physics processing
 
 # Deactivate the chunk (called when the chunk is outside the active radius of the player)
 func deactivate():
 	visible = false
 	# Additional deactivation logic can be added here
-
+	for child in get_children():
+		self.remove_child.call_deferred(child)
 # Optionally, if you need to process each block in the chunk
 func _process(delta: float) -> void:
 	if not visible:
