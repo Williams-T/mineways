@@ -3,7 +3,8 @@ class_name Block
 
 var parent_chunk
 var local_index = Vector2i(0,0)
-var offset = Vector2.ZERO
+var true_index = Vector2i(0,0)
+var _offset = Vector2.ZERO
 var type = 0
 var mode = 0
 var active = false
@@ -11,6 +12,7 @@ var timer
 var count = 0.0
 
 var width = TextureControl.tile_size
+var height = width
 var _texture : Texture2D
 var texture_size = Vector2.ZERO
 var texture_origin = Vector2.ZERO
@@ -18,9 +20,19 @@ var texture_origin = Vector2.ZERO
 var integrity = 3
 var armor = 0
 
+var square_points = [
+	Vector2(-4.5,4.5),
+	Vector2(-4.5, 0),
+	Vector2(-4.5, -4.5),
+	Vector2(4.5, -4.5),
+	Vector2(4.5, 0),
+	Vector2(4.5, 4.5),
+]
+var polygon_increment = 3
+
 func _init( loc_id, _type, _timer, _active = false):
-	#parent_chunk = parent
 	local_index = loc_id
+	#local_index = ()
 	position = Vector2(loc_id.x * width, loc_id.y * width)
 	if _active != false:
 		active = _active
@@ -49,7 +61,7 @@ func remap_texture(new_texture = _texture):
 	if new_texture != _texture or texture_size == Vector2.ZERO:
 		_texture = new_texture as Texture2D
 		texture_size = _texture.get_size()
-	texture_origin = Vector2(randi() % int(texture_size.x - width), randi() % int(texture_size.y - width))
+	texture_origin = Vector2(randi() % int(texture_size.x - width), randi() % int(texture_size.y - height))
 	queue_redraw()
 
 func _draw():

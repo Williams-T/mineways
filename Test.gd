@@ -41,23 +41,23 @@ func spawn_stack(x, y):
 					if ii > 60:
 						_type = 9
 					var timer = (randf() * 10.0) + 3.0
-					var block = Block.new(
-						self,
-						Vector2(i, ii),
-						#randi() % 10,
-						_type,
-						timer,
-						true
-					)
+					#var block = Block.new(
+						#self,
+						#Vector2(i, ii),
+						##randi() % 10,
+						#_type,
+						#timer,
+						#true
+					#)
 					#block.position = Vector2(i * tile_size, ii * tile_size)
-					add_child(block)
+					#add_child(block)
 
 func _input(event):
-	if event.is_action_pressed('left_click'):
-		var pos = get_global_mouse_position()
-		var block = Block.new(self, Vector2(0,0), type, randi() % 9 + 1, true)
-		block.position = pos
-		add_child(block)
+	#if event.is_action_pressed('left_click'):
+		#var pos = get_global_mouse_position()
+		#var block = Block.new(self, Vector2(0,0), type, randi() % 9 + 1, true)
+		#block.position = pos
+		#add_child(block)
 	if event.is_action_pressed('right_click'):
 		spawn_stack(120, 70)
 	if event.is_action_released('1'):

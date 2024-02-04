@@ -15,6 +15,8 @@ var db_div_steps = []
 var db_gap_steps = []
 var db_noise_multipliers = []
 var db_limits = []
+var current_block_square = Vector2(-9999, -9999)
+
 
 signal finished
 signal layer
@@ -38,9 +40,10 @@ var noise = FastNoiseLite.new()
 
 var world_size = Vector2(333, 333)
 var tile_size = TextureControl.tile_size
-var chunk_size = 32
+var chunk_size = 16
 
 var done = false
+var dict_ready = false
 var data = []
 
 var m = 0.03
@@ -65,7 +68,8 @@ var steps = [
 	"set_inner_limits",
 	"adjust_inner_lines",
 	"initialize_blocks",
-	"populate_debug"
+	"populate_debug",
+	"unload_to_dict"
 ]
 
 func _ready():
@@ -89,8 +93,9 @@ func increment_process():
 		else:
 			await call(steps[next_step])
 		next_step += 1
-		print("Next function: " + steps[next_step])
-		queue_redraw()
+		if next_step < steps.size():
+			print("Next function: " + steps[next_step])
+			queue_redraw()
 
 func initialize_values():
 	db_world_size_x = randi_range(222, 2222)
@@ -245,13 +250,15 @@ func initialize_blocks():
 		var chunk_id
 		if height > 0:
 			for k in height:
-				var _k = int(inner_lines[0][j].y) + k
+				var _k = int(inner_lines[0][j].y) + (k)
 				chunk_id = Vector2(int(_j / chunk_size), int(_k / chunk_size))
 				#print(chunk_id)
 				if !chunks.has(chunk_id):
 					chunks[chunk_id] = Chunk.new(chunk_id)
 					add_child.call_deferred(chunks[chunk_id])
 				var _type = check_type(j,_k)
+				#current_block_square = Vector2(_j, _k)
+				#queue_redraw()
 				block = Block.new(
 					Vector2(_j, _k),
 						_type,
@@ -266,6 +273,8 @@ func initialize_blocks():
 				chunks[chunk_id] = Chunk.new(chunk_id)
 				add_child.call_deferred(chunks[chunk_id])
 			var _type = check_type(j, int(inner_lines[0][j].y))
+			#current_block_square = Vector2(j, int(inner_lines[0][j].y))
+			#queue_redraw()
 			block = Block.new(
 				Vector2(_j,int(inner_lines[0][j].y)),
 				_type,
@@ -277,6 +286,7 @@ func initialize_blocks():
 		var counter = int(world_size.x /5.0)
 		if j % counter == 0:
 			continue # keep this breakpoint on to keep the loading sequence from freezing ;3
+	dict_ready = true
 	#print("Chunk Keys:")
 	#var keys_string = ""
 	#var last_key = Vector2.ZERO
@@ -367,6 +377,8 @@ func send_debug_panel_data():
 
 func _draw(): 
 	if draw_flag:
+		if current_block_square != Vector2(-9999, -9999):
+			draw_rect(Rect2(current_block_square * Vector2(tile_size, tile_size), Vector2(tile_size, tile_size)), Color.WHITE_SMOKE, false, 3.0)
 		for i in outer_line:
 			draw_circle(Vector2(i.x*tile_size, i.y*tile_size), tile_size, debug_colors[0])
 		for j in inner_lines.size()-1:

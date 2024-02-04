@@ -23,8 +23,10 @@ var tile_size = TextureControl.tile_size
 var chunk_id
 var chunk_size = Vector2(16, 16)  # Size of the chunk in terms of blocks
 var blocks = {}  # Dictionary to store blocks, keyed by their local position within the chunk
+var delta_count = 0
+var debug_mode = true
 
-var debug_mode = false
+var thread = Thread.new()
 
 # Initialization: position in the grid of chunks
 func _init(chunk_position: Vector2):
@@ -32,15 +34,25 @@ func _init(chunk_position: Vector2):
 	chunk_id = chunk_position
 	name = "Chunk_" + str(chunk_position)
 	if debug_mode:
-		modulate = Color(randf_range(0.2, 1.0), randf_range(0.2, 1.0), randf_range(0.2, 1.0), randf_range(0.88, 1.0))
-	
+		modulate = Color(randf_range(0.8, 1.0), randf_range(0.8, 1.0), randf_range(0.8, 1.0), randf_range(0.88, 1.0))
+
+func check_culling():
+	var cam_rect = get_viewport_rect()
+	cam_rect.grow(chunk_size.x * tile_size)
+	if !cam_rect.intersects(Rect2(chunk_id * chunk_size, chunk_size*Vector2(tile_size)), true):
+		deactivate()
+	else:
+		activate()
 
 # Method to add a block to this chunk
 func add_block(block: Block, local_position: Vector2):
 	var relative_position = local_position - chunk_id
 	blocks[relative_position] = block
+	#if blocks.size() > chunk_size.x * chunk_size.x:
+		#print("Overloaded Chunk: %s, %s" % [chunk_id, blocks.size()])
+		#pass
 	#block.position = local_position * Block.get_block_size()
-	add_child(block)
+	#add_child(block)
 
 # Activate the chunk (called when the chunk is within active radius of the player)
 func activate():
@@ -81,9 +93,13 @@ func save_chunk(mode := 0):
 		return 0
 	if mode == 1:
 		return chunk_data
-	
-	
 
+func load_data():
+	# Replace with actual chunk loading logic, either from files or procedural generation
+	# Example:
+	# blocks = BlockManager.chunks[chunk_id].blocks  # Load from BlockManager
+	# ... or generate blocks procedurally
+	blocks = BlockManager.chunks[chunk_id]
 
 func load_chunk():
 	pass

@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://b2i7ngxf7m87v"]
+
+[ext_resource type="Script" path="res://resources/Block.gd" id="1_bdsqv"]
+
+[node name="Block" type="Polygon2D"]
+position = Vector2(11, 9)
+polygon = PackedVector2Array(-4.5, 4.5, -4.5, 0, -4.5, -4.5, 4.5, -4.5, 4.5, 0, 4.5, 4.5)
+script = ExtResource("1_bdsqv")
+
+[connection signal="ready" from="." to="." method="_on_ready"]
